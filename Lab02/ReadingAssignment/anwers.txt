@@ -1,0 +1,25 @@
+When should accessor methods be used?
+Accessor methods (i.e. getter and setter methods) should be used in some 
+situations such as:
+
+Encapsulation: Accessor methods can help to encapsulate the fields of
+ a class by providing a way to read and modify them. They allow the class to enforce its internal state and ensure that it is in the required format.
+
+Information hiding: Using accessor methods can hide the implementation 
+details of a class and only expose a limited interface to the outside world.
+ This way, changes to the implementation can be performed without 
+ affecting the rest of the system.
+
+Validation: Accessor methods can be used to validate the input before 
+setting a variable or returning a value. This ensures that the program
+ is in a consistent state.
+
+Flexibility: Accessor methods make it possible to change the internal 
+representation of the data without breaking the code that uses it.
+ This makes the code more flexible and easier to maintain.
+
+In some cases, getter and setter methods may not be necessary or even
+ harmful. For example, in situations where direct field access is appropriate,
+  or when the getter/setter methods do not provide added value (e.g. they 
+  simply return or set a field). In such cases, it may be better to make
+   the field public or use alternative patterns.
