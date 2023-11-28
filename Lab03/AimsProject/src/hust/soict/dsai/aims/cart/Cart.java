@@ -1,123 +1,120 @@
+/**
+ * @author: CaoThiThuPhuong
+ */
 package hust.soict.dsai.aims.cart;
-import java.util.ArrayList;
-import java.util.Collections;
+import hust.soict.dsai.aims.disc.DigitalVideoDisc;
 
 public class Cart {
-	public static final int MAX_NUMBERS_ORDER = 20;
+	public static final int MAX_NUMBERS_ORDERED = 20;
+	private DigitalVideoDisc itemsOrdered[] = new DigitalVideoDisc[MAX_NUMBERS_ORDERED];
+	private int qtyOrdered = 0; 
 	
-	ArrayList<DigitalVideoDisc> itemsOrder = new ArrayList<DigitalVideoDisc>();
-	
-	private int qtyOrdered;
-	
-	public int getQtyOrder() {
-        return qtyOrdered;
-    }
-	
-	public void addDigitalVideoDisc(DigitalVideoDisc disc) {
-		if (qtyOrdered < MAX_NUMBERS_ORDER){
-            itemsOrder.add(disc);
-            qtyOrdered++;
-            System.out.println("The disc has been added");
-        } else {
-            System.out.println("The cart is almost full");
-        }
+	// Get Number of List DVD
+	public int getQtyOrdered() {
+		return qtyOrdered;
 	}
 	
-	public void displayCart() {
-        System.out.println("------- Cart Display -------");
-        for (DigitalVideoDisc disc : itemsOrder){
-            System.out.printf("%-20s %-15s %-20s %-5d %-5.2f \n", disc.getTitle(), disc.getCategory(),
-                    disc.getDirector(), disc.getLength(), disc.getCost());
-        }
-    }
+	public void setQtyOrdered(int n) {
+		qtyOrdered += n;
+	}
 	
-	public double totalCost() {
-		double total = 0;
-		for (DigitalVideoDisc disc : itemsOrder){
-			total += (double) disc.getCost();
+	//	Add 1 DVD to List Card
+	public void addDigitalVideoDisc(DigitalVideoDisc disc) {
+		if(this.getQtyOrdered() != 20) {
+			itemsOrdered[this.getQtyOrdered()] = disc;
+			setQtyOrdered(1);
+			System.out.println("The disc has been added");
+		}
+		else {
+			System.out.println("The cart is almost full");
+		}
+	}
+	
+	// Add list N DVD to list Card	
+	public void addDigitalVideoDisc(DigitalVideoDisc[] dvdList) {
+		int n = dvdList.length;
+		if(n == 0 || (n + this.getQtyOrdered()) >= 20) {
+			System.out.println("The cart is almost full");
+			return;
+		}
+		else {
+			for(int i = 0; i < n; i++) {
+				addDigitalVideoDisc(dvdList[i]);
+			}
+			System.out.println("The disc has been added");
+		}
+	}
+	
+	// Add 2 DVD to List Card	
+	public void addDigitalVideoDisc(DigitalVideoDisc dvd1, DigitalVideoDisc dvd2) {
+		if(this.getQtyOrdered() >= 19) {
+			System.out.println("The cart is almost full");
+		}
+		else {
+			itemsOrdered[this.getQtyOrdered()] = dvd1;
+			setQtyOrdered(1);
+			itemsOrdered[this.getQtyOrdered()] = dvd2;
+			setQtyOrdered(1);
+			System.out.println("The disc has been added");
+		}
+	}
+	
+	
+	// Remove DVD of Card	
+	public void removeDigitalVideoDisc(DigitalVideoDisc disc) {
+		for(int i = 0; i < qtyOrdered; i++) {
+			if(itemsOrdered[i].getTitle() == disc.getTitle()) {
+				for(int j = i; j < qtyOrdered; j++) {
+					itemsOrdered[j] = itemsOrdered[j + 1];
+				}
+				i--;
+				setQtyOrdered(-1);
+				System.out.println("The disc has been removed");
+			}
+		}
+	}
+	
+	//	Total Cost of Card
+	public float totalCost() {
+		float total = 0;
+		for(int i = 0; i < qtyOrdered; i++) {
+			total += itemsOrdered[i].getCost();
 		}
 		return total;
 	}
-	
-	public void removeDigitalVideoDisc(DigitalVideoDisc disc) {
-		itemsOrder.remove(disc);
-		qtyOrdered--;
-		System.out.printf("The disc %s has been removed\n",disc.getTitle());
+	// Search by ID	
+	public boolean search(int id) {
+		int n = getQtyOrdered();
+		for(int i = 0; i < n; i++) {
+			if(itemsOrdered[i].getId() == id) {
+				return true;
+			}
+		}
+		return false;
 	}
-	
-	/**
-     * This function adds a list of DVDs to the cart
-     * @param dvdList an array of hust.soict.dsai.aims.disc.DigitalVideoDisc objects
-     * @return The method returns a boolean value.
-     */
-	public boolean addDigitalVideoDisc(DigitalVideoDisc[] dvdList){
-        for (int i = 0; i < dvdList.length; i++){
-            if (qtyOrdered <= MAX_NUMBERS_ORDER){
-                itemsOrder.add(dvdList[i]);
-                qtyOrdered++;
-            } else {
-                System.out.println("The cart is almost full");
-                return false;
-            }
-        }
-        System.out.println("The disc has been added");
-        return true;
-    }
-	
-	/**
-    * This function adds 2 DVDs to the cart
-    * @param dvd1,dvd2
-    * @return The method returns a boolean value.
-    */
-	public boolean addDigitalVideoDisc(DigitalVideoDisc dvd1,DigitalVideoDisc dvd2) {
-		if (qtyOrdered < MAX_NUMBERS_ORDER -1 ){
-            itemsOrder.add(dvd1);
-            itemsOrder.add(dvd2);
-            qtyOrdered+=2;
-            System.out.println("2 disc has been added");
-            return true;
-        } else {
-            System.out.println("The cart is almost full");
-            return false;
-        }
+	// Search by Title
+	public boolean search(String title) {
+		int n = getQtyOrdered();
+		for(int i = 0; i < n; i++) {
+			if(itemsOrdered[i].getTitle() == title) {
+				return true;
+			}
+		}
+		return false;
 	}
-	
-	/**
-	    * This function display cart according to the assignment required format
-	    * ***********************CART***********************
-		* Ordered Items:
-		* 1. DVD - [Title] - [category] - [Director] - [Length]: [Prsice] $
-		* 2. DVD - [Title] - ...
-		* Total cost: [total cost]
-		* ***************************************************
-	*/
-	public void displayCart2() {
-        System.out.println("***********************CART***********************\nOrdered Items:");
-        int i=1;
-        double total = 0;
-        for (DigitalVideoDisc disc : itemsOrder){
-            System.out.printf("%d. DVD %-20s %-15s %-20s %-5d %-5.2f \n",i, disc.getTitle(), disc.getCategory(),
-                    disc.getDirector(), disc.getLength(), disc.getCost());
-            i++;
-            total += (double) disc.getCost();
-        }
-        System.out.printf("Total cost: %f", total);
-    }
-	
-	/**
-     * It searches for a DVD in the cart by its id.
-     * @param id of the DVD to search
-     * @return The method returns a boolean value.
-     */
-    public boolean searchInCart(int id){
-        for (DigitalVideoDisc disc: itemsOrder){
-            if(disc.getId() == id){
-                System.out.println(disc.toString());
-                return true;
-            }
-        }
-        System.out.println("Not found!");
-        return false;
-    }
-	
+	// Print Cart
+	public void printCart() {
+		System.out.println("***********************CART***********************");
+		int n = getQtyOrdered();
+		for(int i = 0; i < n; i++) {
+			System.out.println((i+1) + ".DVD - " + itemsOrdered[i].getTitle() + " - " + 
+					itemsOrdered[i].getCategory() + " - " + 
+					itemsOrdered[i].getTitle() + " - " + 
+					itemsOrdered[i].getDirector() + " - " + 
+					itemsOrdered[i].getLength() + " : " + 
+					itemsOrdered[i].getCost());
+		}
+		System.out.println("Total cost: " + totalCost());
+		System.out.println("***************************************************");
+	}
 }
